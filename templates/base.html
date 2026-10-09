@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure File Sharing System</title>
+    <style>
+        body{font-family:Arial,sans-serif;background:#f4f7fb;margin:0;color:#1f2937}
+        nav{background:#123b7a;color:white;padding:16px 6%;display:flex;justify-content:space-between}
+        nav a{color:white;text-decoration:none;margin-left:15px}
+        .container{max-width:1000px;margin:35px auto;padding:0 20px}
+        .card{background:white;padding:24px;border-radius:12px;box-shadow:0 4px 15px #0001;margin-bottom:20px}
+        input,button,select{padding:10px;margin:5px 0;border:1px solid #ccd3df;border-radius:7px}
+        button{background:#123b7a;color:white;border:0;cursor:pointer}
+        .danger{background:#b42318}
+        .success{background:#067647;color:white;padding:10px;border-radius:7px}
+        .error{background:#b42318;color:white;padding:10px;border-radius:7px}
+        table{width:100%;border-collapse:collapse}
+        th,td{padding:12px;border-bottom:1px solid #eee;text-align:left}
+        .actions form{display:inline}
+        .small{font-size:13px;color:#667085}
+    </style>
+</head>
+<body>
+<nav>
+    <strong>🔐 Secure File Sharing</strong>
+    <div>
+        {% if current_user %}
+            <span>{{ current_user['username'] }} ({{ current_user['role'] }})</span>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            {% if current_user['role'] == 'admin' %}
+                <a href="{{ url_for('users') }}">Users</a>
+            {% endif %}
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
+    </div>
+</nav>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="{{ 'success' if category == 'success' else 'error' }}">{{ message }}</div>
+            <br>
+        {% endfor %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Upload File</h2>
+    <form method="post" action="{{ url_for('upload') }}" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload & Encrypt</button>
+    </form>
+    <p class="small">Files are encrypted before being stored on the server.</p>
+</div>
+
+<div class="card">
+    <h2>Accessible Files</h2>
+    {% if files %}
+    <table>
+        <tr><th>File</th><th>Uploaded By</th><th>Actions</th></tr>
+        {% for f in files %}
+        <tr>
+            <td>{{ f['original_name'] }}</td>
+            <td>{{ f['username'] }}</td>
+            <td class="actions">
+                <a href="{{ url_for('download', file_id=f['id']) }}"><button>Download</button></a>
+                <form method="post" action="{{ url_for('create_share_link', file_id=f['id']) }}">
+                    <input type="number" name="minutes" value="10" min="1" max="1440" style="width:65px">
+                    <button type="submit">Temporary Link</button>
+                </form>
+                <form method="post" action="{{ url_for('delete_file', file_id=f['id']) }}" onsubmit="return confirm('Delete this file?')">
+                    <button class="danger" type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No files available.</p>
+    {% endif %}
+</div>
+{% endblock %}

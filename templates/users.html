@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>User Management</h2>
+    <table>
+        <tr><th>ID</th><th>Username</th><th>Role</th><th>Change Role</th></tr>
+        {% for u in users %}
+        <tr>
+            <td>{{ u['id'] }}</td>
+            <td>{{ u['username'] }}</td>
+            <td>{{ u['role'] }}</td>
+            <td>
+                <form method="post" action="{{ url_for('change_role', user_id=u['id']) }}">
+                    <select name="role">
+                        <option value="user" {% if u['role']=='user' %}selected{% endif %}>User</option>
+                        <option value="admin" {% if u['role']=='admin' %}selected{% endif %}>Admin</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
